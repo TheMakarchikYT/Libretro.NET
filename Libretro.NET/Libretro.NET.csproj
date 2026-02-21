@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Libretro.NET</PackageId>
+    <Description>.NET Standard bindings to easily run Libretro cores!</Description>
+    <Version>0.1.1</Version>
+    <Authors>Julien Loir</Authors>
+    <RepositoryUrl>https://github.com/Namaneo/Libretro.NET</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net35</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+    <LangVersion>default</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+    <None Include="../LICENSE.md" Pack="true" PackagePath="" />
+    <None Include="../CHANGELOG.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

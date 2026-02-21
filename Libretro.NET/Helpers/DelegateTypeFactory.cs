@@ -1,0 +1,3 @@
+namespace Libretro.NET
+{
+}
