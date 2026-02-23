@@ -14,6 +14,7 @@ namespace Libretro.NET
         public double FPS { get; private set; }
         public double SampleRate { get; private set; }
         public retro_pixel_format PixelFormat { get; private set; }
+        public int ActualBytesPerPixel { get; private set; } = 2;
         public string SystemDirectory { get; set; } = ".";
         public string SaveDirectory { get; set; } = ".";
 
@@ -105,41 +106,41 @@ namespace Libretro.NET
             switch (cmd)
             {
                 case RetroBindings.RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
-                    {
-                        char** cb = (char**)data;
-                        *cb = (char*)Marshal.StringToHGlobalAnsi(SystemDirectory ?? ".");
-                        return true;
-                    }
+                {
+                    char** cb = (char**)data;
+                    *cb = (char*)Marshal.StringToHGlobalAnsi(SystemDirectory ?? ".");
+                    return true;
+                }
                 case RetroBindings.RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
-                    {
-                        char** cb = (char**)data;
-                        *cb = (char*)Marshal.StringToHGlobalAnsi(SaveDirectory ?? SystemDirectory ?? ".");
-                        return true;
-                    }
+                {
+                    char** cb = (char**)data;
+                    *cb = (char*)Marshal.StringToHGlobalAnsi(SaveDirectory ?? SystemDirectory ?? ".");
+                    return true;
+                }
                 case RetroBindings.RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
-                    {
-                        PixelFormat = (retro_pixel_format)(*(byte*)data);
-                        return true;
-                    }
+                {
+                    PixelFormat = (retro_pixel_format)(*(byte*)data);
+                    return true;
+                }
                 case RetroBindings.RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
-                    {
-                        retro_log_callback* cb = (retro_log_callback*)data;
-                        retro_log_printf_t logDel = Log;
-                        cb->log = _core.Register(logDel);
-                        return true;
-                    }
+                {
+                    retro_log_callback* cb = (retro_log_callback*)data;
+                    retro_log_printf_t logDel = Log;
+                    cb->log = _core.Register(logDel);
+                    return true;
+                }
                 case RetroBindings.RETRO_ENVIRONMENT_GET_CAN_DUPE:
-                    {
-                        *(bool*)data = true;
-                        return true;
-                    }
+                {
+                    *(bool*)data = true;
+                    return true;
+                }
                 case RetroBindings.RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK:
-                    {
-                        retro_frame_time_callback* cb = (retro_frame_time_callback*)data;
-                        retro_frame_time_callback_t timeDel = Time;
-                        cb->callback = _core.Register(timeDel);
-                        return true;
-                    }
+                {
+                    retro_frame_time_callback* cb = (retro_frame_time_callback*)data;
+                    retro_frame_time_callback_t timeDel = Time;
+                    cb->callback = _core.Register(timeDel);
+                    return true;
+                }
                 default:
                     return false;
             }
@@ -147,15 +148,42 @@ namespace Libretro.NET
 
         private void VideoRefresh(void* data, uint width, uint height, UIntPtr pitch)
         {
-            byte[] raw = new byte[(uint)pitch * height];
-            Marshal.Copy((IntPtr)data, raw, 0, (int)pitch * (int)height);
+            if (data == null || width == 0 || height == 0) return;
 
-            byte[] result = new byte[width * 2 * height];
-            int destinationIndex = 0;
-            for (int sourceIndex = 0; sourceIndex < (uint)pitch * height; sourceIndex += (int)pitch)
+            // bpp определяем по формату пикселей, а не по pitch/width (pitch может быть с padding'ом)
+            int bytesPerPixel;
+            if (PixelFormat == retro_pixel_format.RETRO_PIXEL_FORMAT_XRGB8888)
+                bytesPerPixel = 4;
+            else
+                bytesPerPixel = 2; // RGB565 и RGB1555 — оба 2 байта на пиксель
+            ActualBytesPerPixel = bytesPerPixel;
+
+            int srcPitch = (int)pitch;
+            int dstStride = (int)width * bytesPerPixel;
+            int h = (int)height;
+
+            byte[] raw = new byte[srcPitch * h];
+            Marshal.Copy((IntPtr)data, raw, 0, raw.Length);
+
+            byte[] result = new byte[dstStride * h];
+            for (int y = 0; y < h; y++)
+                Array.Copy(raw, y * srcPitch, result, y * dstStride, dstStride);
+
+            // mednafen XRGB8888 в памяти (little-endian) = [B][G][R][X]
+            // Unity BGRA32 ждёт [B][G][R][A] — меняем X→A=255, R и B уже на месте
+            // НО: если цвета инвертированы (красный↔синий), значит core шлёт [R][G][B][X]
+            // поэтому меняем местами байт 0 (R) и байт 2 (B), и байт 3 → 255
+            if (bytesPerPixel == 4)
             {
-                Array.Copy(raw, sourceIndex, result, destinationIndex, width * 2);
-                destinationIndex += (int)width * 2;
+                for (int i = 0; i < result.Length; i += 4)
+                {
+                    byte r = result[i + 0];
+                    // result[i+1] = G — не трогаем
+                    byte b = result[i + 2];
+                    result[i + 0] = b;   // B на место 0
+                    result[i + 2] = r;   // R на место 2
+                    result[i + 3] = 255; // X → A
+                }
             }
 
             if (OnFrame != null)
@@ -207,8 +235,8 @@ namespace Libretro.NET
         {
             if (OnLog == null) return;
             string levelStr = level == retro_log_level.RETRO_LOG_ERROR ? "ERROR" :
-                              level == retro_log_level.RETRO_LOG_WARN ? "WARN" :
-                              level == retro_log_level.RETRO_LOG_INFO ? "INFO" : "DEBUG";
+                              level == retro_log_level.RETRO_LOG_WARN  ? "WARN"  :
+                              level == retro_log_level.RETRO_LOG_INFO  ? "INFO"  : "DEBUG";
             string raw = Marshal.PtrToStringAnsi((IntPtr)fmt) ?? "";
             string msg = raw.Contains("%") ? raw.Replace("%s", "?").Replace("%d", "?").Replace("%i", "?").Replace("%u", "?").Replace("%f", "?").Replace("%x", "?").TrimEnd('\n', '\r') : raw.TrimEnd('\n', '\r');
             OnLog(levelStr, msg);

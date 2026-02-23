@@ -38,18 +38,18 @@ namespace Libretro.NET
             if (_lib == IntPtr.Zero)
                 throw new Exception("Failed to load core: " + path);
 
-            _setEnvironment = GetFunc<SetEnvironmentFunc>("retro_set_environment");
+            _setEnvironment  = GetFunc<SetEnvironmentFunc>("retro_set_environment");
             _setVideoRefresh = GetFunc<SetVideoRefreshFunc>("retro_set_video_refresh");
-            _setInputPoll = GetFunc<SetInputPollFunc>("retro_set_input_poll");
-            _setInputState = GetFunc<SetInputStateFunc>("retro_set_input_state");
-            _setAudioSample = GetFunc<SetAudioSampleFunc>("retro_set_audio_sample");
+            _setInputPoll    = GetFunc<SetInputPollFunc>("retro_set_input_poll");
+            _setInputState   = GetFunc<SetInputStateFunc>("retro_set_input_state");
+            _setAudioSample  = GetFunc<SetAudioSampleFunc>("retro_set_audio_sample");
             _setAudioSampleBatch = GetFunc<SetAudioSampleBatchFunc>("retro_set_audio_sample_batch");
-            _init = GetFunc<InitFunc>("retro_init");
-            _deinit = GetFunc<DeinitFunc>("retro_deinit");
-            _getSystemInfo = GetFunc<GetSystemInfoFunc>("retro_get_system_info");
-            _loadGame = GetFunc<LoadGameFunc>("retro_load_game");
+            _init            = GetFunc<InitFunc>("retro_init");
+            _deinit          = GetFunc<DeinitFunc>("retro_deinit");
+            _getSystemInfo   = GetFunc<GetSystemInfoFunc>("retro_get_system_info");
+            _loadGame        = GetFunc<LoadGameFunc>("retro_load_game");
             _getSystemAvInfo = GetFunc<GetSystemAvInfoFunc>("retro_get_system_av_info");
-            _run = GetFunc<RunFunc>("retro_run");
+            _run             = GetFunc<RunFunc>("retro_run");
         }
 
         private TDelegate GetFunc<TDelegate>(string name) where TDelegate : class
