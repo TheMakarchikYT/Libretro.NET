@@ -31,6 +31,12 @@ namespace Libretro.NET
         private LoadGameFunc _loadGame;
         private GetSystemAvInfoFunc _getSystemAvInfo;
         private RunFunc _run;
+<<<<<<< HEAD
+        private SerializeSizeFunc _serializeSize;
+        private SerializeFunc _serialize;
+        private UnserializeFunc _unserialize;
+=======
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
 
         public void Load(string path)
         {
@@ -50,6 +56,12 @@ namespace Libretro.NET
             _loadGame        = GetFunc<LoadGameFunc>("retro_load_game");
             _getSystemAvInfo = GetFunc<GetSystemAvInfoFunc>("retro_get_system_av_info");
             _run             = GetFunc<RunFunc>("retro_run");
+<<<<<<< HEAD
+            _serializeSize   = GetFunc<SerializeSizeFunc>("retro_serialize_size");
+            _serialize       = GetFunc<SerializeFunc>("retro_serialize");
+            _unserialize     = GetFunc<UnserializeFunc>("retro_unserialize");
+=======
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
         }
 
         private TDelegate GetFunc<TDelegate>(string name) where TDelegate : class
@@ -140,6 +152,24 @@ namespace Libretro.NET
             _deinit();
         }
 
+<<<<<<< HEAD
+        public UIntPtr serialize_size()
+        {
+            return _serializeSize();
+        }
+
+        public bool serialize(IntPtr data, UIntPtr size)
+        {
+            return _serialize(data, size) != 0;
+        }
+
+        public bool unserialize(IntPtr data, UIntPtr size)
+        {
+            return _unserialize(data, size) != 0;
+        }
+
+=======
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
         public void Dispose()
         {
             if (_lib != IntPtr.Zero)
@@ -181,5 +211,14 @@ namespace Libretro.NET
         private delegate void GetSystemAvInfoFunc(IntPtr av);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void RunFunc();
+<<<<<<< HEAD
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate UIntPtr SerializeSizeFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate byte SerializeFunc(IntPtr data, UIntPtr size);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate byte UnserializeFunc(IntPtr data, UIntPtr size);
+=======
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
     }
 }

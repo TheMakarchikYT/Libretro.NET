@@ -150,12 +150,19 @@ namespace Libretro.NET
         {
             if (data == null || width == 0 || height == 0) return;
 
+<<<<<<< HEAD
+=======
             // bpp определяем по формату пикселей, а не по pitch/width (pitch может быть с padding'ом)
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
             int bytesPerPixel;
             if (PixelFormat == retro_pixel_format.RETRO_PIXEL_FORMAT_XRGB8888)
                 bytesPerPixel = 4;
             else
+<<<<<<< HEAD
+                bytesPerPixel = 2; 
+=======
                 bytesPerPixel = 2; // RGB565 и RGB1555 — оба 2 байта на пиксель
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
             ActualBytesPerPixel = bytesPerPixel;
 
             int srcPitch = (int)pitch;
@@ -169,10 +176,13 @@ namespace Libretro.NET
             for (int y = 0; y < h; y++)
                 Array.Copy(raw, y * srcPitch, result, y * dstStride, dstStride);
 
+<<<<<<< HEAD
+=======
             // mednafen XRGB8888 в памяти (little-endian) = [B][G][R][X]
             // Unity BGRA32 ждёт [B][G][R][A] — меняем X→A=255, R и B уже на месте
             // НО: если цвета инвертированы (красный↔синий), значит core шлёт [R][G][B][X]
             // поэтому меняем местами байт 0 (R) и байт 2 (B), и байт 3 → 255
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
             if (bytesPerPixel == 4)
             {
                 for (int i = 0; i < result.Length; i += 4)
@@ -246,6 +256,44 @@ namespace Libretro.NET
         {
         }
 
+<<<<<<< HEAD
+        public bool SaveState(string filePath)
+        {
+            UIntPtr size = _core.serialize_size();
+            if ((ulong)size == 0) return false;
+            IntPtr buf = Marshal.AllocHGlobal((int)size);
+            try
+            {
+                if (!_core.serialize(buf, size)) return false;
+                byte[] data = new byte[(int)size];
+                Marshal.Copy(buf, data, 0, data.Length);
+                File.WriteAllBytes(filePath, data);
+                return true;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buf);
+            }
+        }
+
+        public bool LoadState(string filePath)
+        {
+            if (!File.Exists(filePath)) return false;
+            byte[] data = File.ReadAllBytes(filePath);
+            IntPtr buf = Marshal.AllocHGlobal(data.Length);
+            try
+            {
+                Marshal.Copy(data, 0, buf, data.Length);
+                return _core.unserialize(buf, (UIntPtr)data.Length);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buf);
+            }
+        }
+
+=======
+>>>>>>> 7b43a560370944aa0df3a31c7a70ac7f9b08e2d5
         public void Dispose()
         {
             if (_core != null)
