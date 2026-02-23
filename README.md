@@ -1,6 +1,6 @@
 # Libretro.NET
 
-Libretro.NET provides native bindings to the famous [`libretro.h`](https://github.com/libretro/RetroArch/blob/master/libretro-common/include/libretro.h) header. Targeting .NET Standard 2.0, it allows to quickly setup a Libretro emulator for a wide range of platforms.
+Libretro.NET provides native bindings to the famous [`libretro.h`](https://github.com/libretro/RetroArch/blob/master/libretro-common/include/libretro.h) header. Targetting .NET 3.5 and Unity 5.0.04f, it allows to quickly setup a Libretro emulator for a wide range of platforms.
 
 This project is at its early days: only basic features and non-OpenGL cores are supported. That said, if you come by and want to contribute, don't hesitate suggest/implement improvements or report issues!
 
@@ -11,6 +11,7 @@ This library is available as a [NuGet package](https://www.nuget.org/packages/Li
 ```bash
 dotnet add package Libretro.NET
 ```
+For Unity projects, build for .NET 3.5 and import the DLL directly into your Assets/References folder.
 
 # Sample usage
 
