@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj": {}
+    "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj": {
+    "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj": {
       "version": "0.1.1",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
+        "projectUniqueName": "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
         "projectName": "Libretro.NET",
-        "projectPath": "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
+        "projectPath": "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
         "packagesPath": "C:\\Users\\xukol\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\obj\\",
+        "outputPath": "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,14 @@
       "frameworks": {
         "net35": {
           "targetAlias": "net35",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )",
+              "autoReferenced": true
+            }
+          },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101\\RuntimeIdentifierGraph.json"
         }
       }

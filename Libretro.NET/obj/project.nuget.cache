@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "WhuIcqcfU0Y=",
+  "dgSpecHash": "G7dJbl4HQNY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\xukol\\Downloads\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\xukol\\Projects\\PS1\\Libretro.NET-main\\Libretro.NET-main\\Libretro.NET\\Libretro.NET.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\xukol\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\xukol\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net35\\1.0.3\\microsoft.netframework.referenceassemblies.net35.1.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
